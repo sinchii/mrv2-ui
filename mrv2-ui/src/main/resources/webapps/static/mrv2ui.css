@@ -1,0 +1,4 @@
+/* Styles for MRv2UI */
+html, body { height: 100% }
+.content h1, .content h2, .content h3 { margin: 0 0 0.3em; font-weight: normal }
+th, td { padding: 0.2em 0.5em 0 }

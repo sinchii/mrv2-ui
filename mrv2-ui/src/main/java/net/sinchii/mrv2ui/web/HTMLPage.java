@@ -1,0 +1,120 @@
+package net.sinchii.mrv2ui.web;
+
+import java.io.PrintWriter;
+
+public class HTMLPage {
+
+  private PrintWriter out;
+  
+  public static final String DOCTYPE =
+      "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\""
+          + " \"http://www.w3.org/TR/html4/strict.dtd\">";
+  
+  public HTMLPage() {
+    
+  }
+  
+  public HTMLPage(PrintWriter writer) {
+    out = writer;
+  }
+  
+  public void output(String str) {
+    out.println(str);
+  }
+  
+  public HTMLPage html() {
+    out.println("<html>");
+    return this;
+  }
+  
+  public HTMLPage head() {
+    out.println("<head>");
+    return this;
+  }
+  
+  public HTMLPage link(String rel, String href) {
+    out.println("<link rel=\"" + rel + "\" href=\"" + href + "\">");
+    return this;
+  }
+  
+  public HTMLPage title(String title) {
+    out.println("  <title>" + title + "</title>");
+    return this;
+  }
+  
+  public HTMLPage meta_http(String header, String content) {
+    out.println("<meta http-equiv=\"" + header + "\" content=\""
+        + content + "\" >");
+    return this;
+  }
+  
+  public HTMLPage body() {
+    out.println("<body>");
+    return this;
+  }
+  
+  public HTMLPage table() {
+    out.println("<table>");
+    return this;
+  }
+    
+  public HTMLPage thead() {
+    out.println("<thead>");
+    return this;
+  }
+  
+  public HTMLPage tbody() {
+    out.println("<tbody>");
+    return this;
+  }
+  
+  public HTMLPage tr() {
+    out.println("<tr>");
+    return this;
+  }
+  
+  public HTMLPage th(String clazz, String name) {
+    out.println("<th class=\"" + clazz + "\">" + name + "</th>");
+    return this;
+  }
+  
+  public HTMLPage th(String name) {
+    out.println("<th>" + name + "</th>");
+    return this;
+  }
+  
+  public HTMLPage td(String clazz, String name) {
+    out.println("<td class=\"" + clazz + "\">" + name + "</td>");
+    return this;
+  }
+
+  public HTMLPage td(String name) {
+    out.println("<td>" + name + "</td>");
+    return this;
+  }
+
+  public HTMLPage div(String id, String clazz) {
+    out.println("<div id=\"" + clazz + "\" class=\"" + clazz + "\"");
+    return this;
+  }
+
+  public HTMLPage h1(String h1) {
+    out.println("<h1>" + h1 + "</h1>");
+    return this;
+  }
+  
+  public HTMLPage h2(String h2) {
+    out.println("<h2>" + h2 + "</h2>");
+    return this;
+  }
+  
+  public HTMLPage h3(String h3) {
+    out.println("<h3>" + h3 + "</h3>");
+    return this;
+  }
+  
+  public HTMLPage _(String tag) {
+    out.println("</" + tag + ">");
+    return this;
+  }
+}
