@@ -61,6 +61,7 @@
         <configuration>
           <webXml>src/main/resources/webapps/WEB-INF/web.xml</webXml>
           <packagingExcludes>WEB-INF/lib/javax.servlet-api-*.jar</packagingExcludes>
+          <packagingExcludes>WEB-INF/classes/webapps/WEB-INF/web.xml</packagingExcludes>
         </configuration>
       </plugin>
     </plugins>

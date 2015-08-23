@@ -21,12 +21,12 @@ import org.apache.http.util.EntityUtils;
 @WebServlet(name="MRv2UIMain", urlPatterns={"/mrv2-ui"})
 public class MRv2UIMain extends HttpServlet {
 
-  private final static String TLS_HTTP_ADDRESS =
-      "http://192.168.73.133:8188/ws/v1/timeline/MAPREDUCE_JOB/";
+  private String initPath;
   
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
     
+    init();
     res.setContentType("text/html; charset=UTF-8");
     
     PrintWriter writer = res.getWriter();
@@ -39,9 +39,17 @@ public class MRv2UIMain extends HttpServlet {
     doGet(req, res);
   }
   
+  public void init() {
+    String tlsAddress = getInitParameter(MRv2UIConfig.TLS_HTTP_ADDRESS);
+    if (tlsAddress == null) {
+      tlsAddress = MRv2UIConfig.DEFAULT_TLS_HTTP_ADDRESS;
+    }
+    initPath = tlsAddress + "/ws/v1/timeline/MAPREDUCE_JOB/";
+  }
+  
   private void mainInfo(PrintWriter writer) {
     CloseableHttpClient client = HttpClients.createDefault();
-    HttpGet httpGet = new HttpGet(TLS_HTTP_ADDRESS);
+    HttpGet httpGet = new HttpGet(initPath);
 
     String str = null;
     try {
