@@ -27,10 +27,16 @@
   <servlet>
     <display-name>MapReduce v2 UI</display-name>
     <servlet-name>MRv2UI</servlet-name>
-    <init-param>
-      <param-name>mrv2ui.tls.http.address</param-name>
-      <param-value>http://127.0.0.1:8188</param-value>
-    </init-param>
   </servlet>
   
+  <context-param>
+    <param-name>mrv2ui.tls.http.address</param-name>
+    <param-value>http://127.0.0.1:8188</param-value>
+  </context-param>
+  
+  <mime-mapping>    
+    <extension>css</extension>
+    <mime-type>text/css</mime-type>
+  </mime-mapping>
+s
 </web-app>

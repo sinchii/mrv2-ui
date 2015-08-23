@@ -8,6 +8,7 @@ import net.sinchii.mrv2ui.MRv2JobInfo;
 public class MainPage {
 
   private final static String TITLE = "Main Page";
+  private final static String TABLENAME = "jobList";
   
   private HTMLPage page;
   private JSONUtil json;
@@ -23,11 +24,21 @@ public class MainPage {
     page.output(HTMLPage.DOCTYPE);
     page.html().head().meta_http("X-UA-Compatible", "IE=8")
       .meta_http("Content-type", "text/html; charset=UTF-8")
-      .title(TITLE)._("head").body();
+      .title(TITLE);
+    page.link("stylesheet", "text/css",
+        "./mrv2-ui/static/jquery/jquery-ui.css");
+    page.link("stylesheet", "text/css",
+        "./mrv2-ui/static/jquery/jquery.dataTables.css");
+    page.script("text/javascript", "./static/jquery/jquery-ui.min.js")
+      ._("script");
+    page.script("text/javascript", "./static/jquery/jquery.dataTables.min.js")
+      ._("script");
+    page.script("text/script").dataTable(TABLENAME)._("script");
+    page._("head").body();
     
-    page.output("MapReduce Job List");
+    page.h3("MapReduce Job List");
     
-    page.table().thead().tr()
+    page.table(TABLENAME).thead().tr()
       .th("jobid", "Job ID").th("jobname", "Job Name").th("user", "User")
       .th("submittime", "Submit Time").th("startime", "Start Time")
       .th("finsihtime", "Finish Time").th("maptasks", "Map Tasks")

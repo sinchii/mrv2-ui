@@ -37,6 +37,12 @@ public class HTMLPage {
     return this;
   }
   
+  public HTMLPage link(String rel, String type, String href) {
+    out.println("<link rel=\"" + rel + "\" type=\"" 
+        + type + "\" href=\"" + href + "\">");
+    return this;
+  }
+  
   public HTMLPage title(String title) {
     out.println("  <title>" + title + "</title>");
     return this;
@@ -44,7 +50,22 @@ public class HTMLPage {
   
   public HTMLPage meta_http(String header, String content) {
     out.println("<meta http-equiv=\"" + header + "\" content=\""
-        + content + "\" >");
+        + content + "\">");
+    return this;
+  }
+  
+  public HTMLPage script() {
+    out.println("<script>");
+    return this;
+  }
+  
+  public HTMLPage script(String type) {
+    out.println("<script type=\"" + type + "\">");
+    return this;
+  }
+  
+  public HTMLPage script(String type, String src) {
+    out.println("<script type=\"" + type + "\" src=\"" + src + "\">");
     return this;
   }
   
@@ -57,7 +78,11 @@ public class HTMLPage {
     out.println("<table>");
     return this;
   }
-    
+  public HTMLPage table(String tableId) {
+    out.println("<table id=\"" + tableId + "\">");
+    return this;
+  }
+  
   public HTMLPage thead() {
     out.println("<thead>");
     return this;
@@ -115,6 +140,14 @@ public class HTMLPage {
   
   public HTMLPage _(String tag) {
     out.println("</" + tag + ">");
+    return this;
+  }
+  
+  public HTMLPage dataTable(String tableId) {
+    String script = "$(document).ready(function() {\n"
+        + "  $('#" + tableId + "').DataTable();\n"
+        + "} );";
+    out.println(script);
     return this;
   }
 }

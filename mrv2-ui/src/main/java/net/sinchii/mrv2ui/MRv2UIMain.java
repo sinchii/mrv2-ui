@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sinchii.mrv2ui.web.ErrorPage;
 import net.sinchii.mrv2ui.web.MainPage;
 
 import org.apache.http.HttpEntity;
@@ -40,7 +41,8 @@ public class MRv2UIMain extends HttpServlet {
   }
   
   public void init() {
-    String tlsAddress = getInitParameter(MRv2UIConfig.TLS_HTTP_ADDRESS);
+    String tlsAddress = getServletConfig().getServletContext()
+        .getInitParameter(MRv2UIConfig.TLS_HTTP_ADDRESS);
     if (tlsAddress == null) {
       tlsAddress = MRv2UIConfig.DEFAULT_TLS_HTTP_ADDRESS;
     }
@@ -54,10 +56,18 @@ public class MRv2UIMain extends HttpServlet {
     String str = null;
     try {
       CloseableHttpResponse response = client.execute(httpGet);
+      int code = response.getStatusLine().getStatusCode();
+      if (code != 200) {
+        new ErrorPage(writer, code);
+        return;
+      }
       HttpEntity entity = response.getEntity();
       str = EntityUtils.toString(entity);
     } catch (Exception e) {
       e.printStackTrace();
+      new ErrorPage(writer, 500);
+      writer.println(initPath);
+      return;
     }
     
     new MainPage(writer, str);
