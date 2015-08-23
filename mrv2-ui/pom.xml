@@ -59,9 +59,9 @@
         <artifactId>maven-war-plugin</artifactId>
         <version>2.6</version>
         <configuration>
-          <webXml>src/main/resources/webapps/WEB-INF/web.xml</webXml>
+          <webXml>src/main/resources/web.xml</webXml>
           <packagingExcludes>WEB-INF/lib/javax.servlet-api-*.jar</packagingExcludes>
-          <packagingExcludes>WEB-INF/classes/webapps/WEB-INF/web.xml</packagingExcludes>
+          <packagingExcludes>WEB-INF/classes/web.xml</packagingExcludes>
         </configuration>
       </plugin>
     </plugins>

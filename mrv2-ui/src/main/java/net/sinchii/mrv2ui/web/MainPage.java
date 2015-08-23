@@ -26,9 +26,9 @@ public class MainPage {
       .meta_http("Content-type", "text/html; charset=UTF-8")
       .title(TITLE);
     page.link("stylesheet", "text/css",
-        "./mrv2-ui/static/jquery/jquery-ui.css");
+        "/mrv2-ui/static/jquery/jquery-ui.css");
     page.link("stylesheet", "text/css",
-        "./mrv2-ui/static/jquery/jquery.dataTables.css");
+        "/mrv2-ui/static/jquery/jquery.dataTables.css");
     page.script("text/javascript", "./static/jquery/jquery-ui.min.js")
       ._("script");
     page.script("text/javascript", "./static/jquery/jquery.dataTables.min.js")
