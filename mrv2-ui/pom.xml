@@ -60,6 +60,11 @@
         <version>2.6</version>
         <configuration>
           <webXml>src/main/resources/web.xml</webXml>
+          <webResources>
+            <resource>
+              <directory>src/main/resources</directory>
+            </resource>
+          </webResources>
           <packagingExcludes>WEB-INF/lib/javax.servlet-api-*.jar</packagingExcludes>
           <packagingExcludes>WEB-INF/classes/web.xml</packagingExcludes>
         </configuration>
