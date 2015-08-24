@@ -9,6 +9,7 @@ public class MainPage {
 
   private final static String TITLE = "Main Page";
   private final static String TABLENAME = "jobList";
+  private final static String TABLECLASS = "display";
   
   private HTMLPage page;
   private JSONUtil json;
@@ -40,7 +41,7 @@ public class MainPage {
     
     page.h3("MapReduce Job List");
     
-    page.table(TABLENAME).thead().tr()
+    page.table(TABLENAME, TABLECLASS).thead().tr()
       .th("jobid", "Job ID").th("jobname", "Job Name").th("user", "User")
       .th("submittime", "Submit Time").th("startime", "Start Time")
       .th("finsihtime", "Finish Time").th("maptasks", "Map Tasks")

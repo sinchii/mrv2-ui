@@ -83,6 +83,11 @@ public class HTMLPage {
     return this;
   }
   
+  public HTMLPage table(String tableId, String clazz) {
+    out.println("<table id=\"" + tableId + "\" class=\"" + clazz +"\">");
+    return this;
+  }
+  
   public HTMLPage thead() {
     out.println("<thead>");
     return this;
