@@ -17,7 +17,7 @@ public class MainPage {
   public MainPage(PrintWriter writer, String str) {
     page = new HTMLPage(writer);
     json = new JSONUtil();
-    json.set(str);
+    json.setEntities(str);
     render();
   }
   
@@ -50,7 +50,8 @@ public class MainPage {
     for (int i = 0; i < json.getNumEvents(); i++) {
       MRv2JobInfo info = json.getMRv2JobInfo(i);
       page.tr()
-        .td(info.getJobId()).td(info.getJobName()).td(info.getUserName())
+        .td().a("/mrv2-ui/m/" + info.getJobId(), info.getJobId())._("td")
+        .td(info.getJobName()).td(info.getUserName())
         .td(Long.toString(info.getSubmitTime()))
         .td(Long.toString(info.getStartTime()))
         .td(Long.toString(info.getFinishTime()))

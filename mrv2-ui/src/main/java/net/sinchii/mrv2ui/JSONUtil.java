@@ -12,10 +12,11 @@ public class JSONUtil {
 
   Gson gson;
   JsonElement element;
+  JsonObject object;
   JsonArray array;
   
-  private final static String ENTITIES = "entities";
-  private final static String EVENTS = "events";
+  public final static String ENTITIES = "entities";
+  public final static String EVENTS = "events";
   private final static String EVENTTYPE = "eventtype";
   private final static String EVENTINFO = "eventinfo";
   
@@ -23,9 +24,13 @@ public class JSONUtil {
     gson = new Gson();
   }
   
-  public void set(String str) {
+  public void setEntities(String str) {
     array = gson.fromJson(str, JsonObject.class).
         get(ENTITIES).getAsJsonArray();
+  }
+  
+  public void setEvent(String str) {
+    object = gson.fromJson(str, JsonObject.class);
   }
   
   public List<String> getEvents() {
@@ -75,8 +80,21 @@ public class JSONUtil {
     
     JsonArray e = array.get(index).getAsJsonObject().
         get(EVENTS).getAsJsonArray();
-    for (int i = 0; i < e.size(); i++) {
-      JsonObject o = e.get(i).getAsJsonObject();
+    setMRv2JobResult(info, e);
+    return info;
+  }
+  
+  public MRv2JobInfo getMRv2JobInfo() {
+    MRv2JobInfo info = MRv2JobInfo.getInstance();
+    info.setJobId(object.get("entity").getAsString());
+    setMRv2JobResult(info, object.get(EVENTS).getAsJsonArray());
+    setMRv2JobResultCounter(info, object.get(EVENTS).getAsJsonArray());
+    return info;
+  }
+  
+  private void setMRv2JobResult(MRv2JobInfo info, JsonArray array) {
+    for (int i = 0; i < array.size(); i++) {
+      JsonObject o = array.get(i).getAsJsonObject();
       if (o.get(EVENTTYPE).getAsString().equals("AM_STARTED")) {
         info.setContainerId(o.get(EVENTINFO).getAsJsonObject().
             get("CONTAINER_ID").getAsString());
@@ -88,6 +106,8 @@ public class JSONUtil {
             get("USER_NAME").getAsString());
         info.setSubmitTime(o.get(EVENTINFO).getAsJsonObject().
             get("SUBMIT_TIME").getAsLong());
+        info.setQueueName(o.get(EVENTINFO).getAsJsonObject().
+            get("QUEUE_NAME").getAsString());
       }
       if (o.get(EVENTTYPE).getAsString().equals("JOB_INITED")) {
         info.setStartTime(o.get(EVENTINFO).getAsJsonObject().
@@ -98,10 +118,39 @@ public class JSONUtil {
             get("TOTAL_REDUCES").getAsInt());
       }
       if (o.get(EVENTTYPE).getAsString().equals("JOB_FINISHED")) {
+        info.setJobStatus(o.get(EVENTINFO).getAsJsonObject().
+            get("JOB_STATUS").getAsString());
         info.setFinishTime(o.get(EVENTINFO).getAsJsonObject().
             get("FINISH_TIME").getAsLong());
       }
     }
-    return info;
+  }
+  
+  private void setMRv2JobResultCounter(MRv2JobInfo info, JsonArray array) {
+    MRv2JobCounterInfo counterInfo = MRv2JobCounterInfo.getInstance();
+    for (int i = 0; i < array.size(); i++) {
+      JsonObject o = array.get(i).getAsJsonObject();
+      if (o.get(EVENTTYPE).getAsString().equals("JOB_FINISHED")) {
+        JsonObject finish = o.get(EVENTINFO).getAsJsonObject();
+        // Map
+        //finish.get("MAP_COUNTERS_GROUPS").getAsJsonArray();
+        // Reduce
+        //finish.get("REDUCE_COUNTERS_GROUPS").getAsJsonArray();
+        // Total
+        JsonArray total = finish.get("TOTAL_COUNTERS_GROUPS").getAsJsonArray();
+        for (int a = 0; a < total.size(); a++) {
+          JsonObject obj = total.get(a).getAsJsonObject();
+          String groupName = obj.get("DISPLAY_NAME").getAsString();
+          JsonArray counters = obj.get("COUNTERS").getAsJsonArray();
+          for (int b = 0; b < counters.size(); b++) {
+            JsonObject counter = counters.get(b).getAsJsonObject();
+            String counterName = counter.get("DISPLAY_NAME").getAsString();
+            long value = counter.get("VALUE").getAsLong();
+            counterInfo.setTotalValue(groupName, counterName, value);
+          }
+        }
+      }
+    }
+    info.setCounterInfo(counterInfo);
   }
 }

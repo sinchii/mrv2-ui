@@ -13,6 +13,13 @@ public class MRv2JobInfo {
   private int mapTasks;
   private int reduceTasks;
   
+  // JobInfoPage
+  private String jobStatus;
+  private String queueName;
+  
+  // CounterInfo
+  private MRv2JobCounterInfo counterInfo;
+  
   public void setContainerId(String id) {
     containerId = id;
   }
@@ -49,6 +56,18 @@ public class MRv2JobInfo {
     reduceTasks = tasks;
   }
   
+  public void setJobStatus(String status) {
+    jobStatus = status;
+  }
+  
+  public void setQueueName(String queue) {
+    queueName = queue;
+  }
+  
+  public void setCounterInfo(MRv2JobCounterInfo info) {
+    counterInfo = info;
+  }
+  
   public String getContainerId() {
     return containerId;
   }
@@ -83,6 +102,18 @@ public class MRv2JobInfo {
   
   public int getReduceTasks() {
     return reduceTasks;
+  }
+  
+  public String getJobStatus() {
+    return jobStatus;
+  }
+  
+  public String getQueueName() {
+    return queueName;
+  }
+  
+  public MRv2JobCounterInfo getCounterInfo() {
+    return counterInfo;
   }
   
   public static MRv2JobInfo getInstance() {

@@ -1,6 +1,8 @@
 package net.sinchii.mrv2ui.web;
 
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class HTMLPage {
 
@@ -123,6 +125,11 @@ public class HTMLPage {
     return this;
   }
 
+  public HTMLPage td() {
+    out.println("<td>");
+    return this;
+  }
+  
   public HTMLPage div(String id, String clazz) {
     out.println("<div id=\"" + clazz + "\" class=\"" + clazz + "\"");
     return this;
@@ -143,6 +150,11 @@ public class HTMLPage {
     return this;
   }
   
+  public HTMLPage a(String href, String name) {
+    out.println("<a href=\"" + href + "\">" + name + "</a>");
+    return this;
+  }
+  
   public HTMLPage _(String tag) {
     out.println("</" + tag + ">");
     return this;
@@ -154,5 +166,21 @@ public class HTMLPage {
         + "} );";
     out.println(script);
     return this;
+  }
+  
+  public static String getDispayDate(long time) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd E HH:mm:ss z");
+    return sdf.format(new Date(time));
+  }
+  
+  public static String getElapsedTime(long time) {
+    long sec = (time / 1000) % 60;
+    long min = (time / 60 / 1000);
+    long hour = (time / 60 / 60 / 1000);
+    String timeStr =
+        ((hour > 0) ? hour + " hour": "")
+        + ((min > 0) ? min + " min" : "")
+        + ((sec > 0) ? sec + " sec" : "");
+    return timeStr;
   }
 }
