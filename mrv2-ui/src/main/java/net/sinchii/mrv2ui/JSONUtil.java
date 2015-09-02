@@ -133,24 +133,37 @@ public class JSONUtil {
       if (o.get(EVENTTYPE).getAsString().equals("JOB_FINISHED")) {
         JsonObject finish = o.get(EVENTINFO).getAsJsonObject();
         // Map
-        //finish.get("MAP_COUNTERS_GROUPS").getAsJsonArray();
+        JsonArray m = finish.get("MAP_COUNTERS_GROUPS").getAsJsonArray();
+        parseCounterValue(counterInfo, m, "MAP");
         // Reduce
-        //finish.get("REDUCE_COUNTERS_GROUPS").getAsJsonArray();
+        JsonArray r = finish.get("REDUCE_COUNTERS_GROUPS").getAsJsonArray();
+        parseCounterValue(counterInfo, r, "REDUCE");
         // Total
-        JsonArray total = finish.get("TOTAL_COUNTERS_GROUPS").getAsJsonArray();
-        for (int a = 0; a < total.size(); a++) {
-          JsonObject obj = total.get(a).getAsJsonObject();
-          String groupName = obj.get("DISPLAY_NAME").getAsString();
-          JsonArray counters = obj.get("COUNTERS").getAsJsonArray();
-          for (int b = 0; b < counters.size(); b++) {
-            JsonObject counter = counters.get(b).getAsJsonObject();
-            String counterName = counter.get("DISPLAY_NAME").getAsString();
-            long value = counter.get("VALUE").getAsLong();
-            counterInfo.setTotalValue(groupName, counterName, value);
-          }
-        }
+        JsonArray t =  finish.get("TOTAL_COUNTERS_GROUPS").getAsJsonArray();
+        parseCounterValue(counterInfo, t, "TOTAL");
       }
     }
     info.setCounterInfo(counterInfo);
+  }
+  
+  private void parseCounterValue(
+      MRv2JobCounterInfo info, JsonArray array, String type) {
+    for (int i = 0; i < array.size(); i++) {
+      JsonObject o = array.get(i).getAsJsonObject();
+      String groupName = o.get("DISPLAY_NAME").getAsString();
+      JsonArray counters = o.get("COUNTERS").getAsJsonArray();
+      for (int j = 0; j <counters.size(); j++) {
+        JsonObject counter = counters.get(j).getAsJsonObject();
+        String counterName = counter.get("DISPLAY_NAME").getAsString();
+        long value = counter.get("VALUE").getAsLong();
+        if (type.equals("MAP")) {
+          info.setMapValue(groupName, counterName, value);
+        } else if (type.equals("REDUCE")) {
+          info.setReduceValue(groupName, counterName, value);
+        } else if (type.equals("TOTAL")) {
+          info.setTotalValue(groupName, counterName, value);
+        }
+      }
+    }
   }
 }

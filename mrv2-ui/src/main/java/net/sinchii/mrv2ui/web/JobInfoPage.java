@@ -1,8 +1,11 @@
 package net.sinchii.mrv2ui.web;
 
 import java.io.PrintWriter;
+import java.text.NumberFormat;
+import java.util.Map;
 
 import net.sinchii.mrv2ui.JSONUtil;
+import net.sinchii.mrv2ui.MRv2JobCounterInfo.Value;
 import net.sinchii.mrv2ui.MRv2JobInfo;
 
 public class JobInfoPage {
@@ -28,17 +31,15 @@ public class JobInfoPage {
       .meta_http("Content-type", "text/html; charset=UTF-8")
       .meta_http("Content-Style-Type", "text/css")
       .title(TITLE + " : " + info.getJobId());
-    page.link("stylesheet", "text/css",
-        "static/jquery/jquery-ui.css");
-    page.link("stylesheet", "text/css",
-        "static/jquery/jquery.dataTables.css");
+    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
+    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery.dataTables.css");
     page._("head").body();
     
     // Job Info table
     page.h3(info.getJobId());
     
     long elapsed = info.getFinishTime() - info.getStartTime();
-    page.table("JobInfo", "display").thead()
+    page.table("JobInfo", "ui-widget-content").thead()
       .tr().th("MapReduce Job Information")._("tr")._("thead");
     page.tbody()
       .tr().th("MapReduce Job ID").td(info.getJobId())._("tr")
@@ -60,7 +61,25 @@ public class JobInfoPage {
     
     // Counter table
     page.h3("Counter Information");
-    page.table();
+    page.table("CounterInfo", "ui-widget-content").thead()
+      .tr().th("Counter Information")._("tr")
+      .tr().th("Group Name").th("Name").td("map").td("reduce").td("total")
+      ._("thead");
+    page.tbody();
+    NumberFormat nf = NumberFormat.getNumberInstance();
+    Map<String, Map<String, Value>> counters = info.getCounterInfo().getCounters();
+    for (String gkey : counters.keySet()) {
+      Map<String, Value> counter = counters.get(gkey);
+      for (String key : counter.keySet()) {
+        
+        page.tr().th(gkey).th(key)
+          .td(nf.format(counter.get(key).getMapValue()))
+          .td(nf.format(counter.get(key).getReduceValue()))
+          .td(nf.format(counter.get(key).getTotalValue()))
+          ._("tr");
+      }
+    }
+    page._("tbody");
     page._("table")._("body")._("html");
   }
 }

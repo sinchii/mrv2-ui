@@ -26,16 +26,14 @@ public class MainPage {
     page.html().head().meta_http("X-UA-Compatible", "IE=8")
       .meta_http("Content-type", "text/html; charset=UTF-8")
       .title(TITLE);
-    page.script("text/javascript", "static/jquery/jquery-1.11.3.min.js")
-    ._("script");
-    page.script("text/javascript", "static/jquery/jquery-ui.min.js")
-    ._("script");
-    page.script("text/javascript", "static/jquery/jquery.dataTables.min.js")
-    ._("script");
-    page.link("stylesheet", "text/css",
-        "static/jquery/jquery-ui.css");
-    page.link("stylesheet", "text/css",
-        "static/jquery/jquery.dataTables.css");
+    page.script("text/javascript",
+        "/mrv2-ui/static/jquery/jquery-1.11.3.min.js")._("script");
+    page.script("text/javascript",
+        "/mrv2-ui/static/jquery/jquery-ui.min.js")._("script");
+    page.script("text/javascript",
+        "/mrv2-ui/static/jquery/jquery.dataTables.min.js")._("script");
+    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
+    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery.dataTables.css");
     page.script().dataTable(TABLENAME)._("script");
     page._("head").body();
     
