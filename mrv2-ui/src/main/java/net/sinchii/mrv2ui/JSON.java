@@ -8,8 +8,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class JSONUtil {
+public class JSON {
 
+  private String strJson;
   Gson gson;
   JsonElement element;
   JsonObject object;
@@ -20,17 +21,18 @@ public class JSONUtil {
   private final static String EVENTTYPE = "eventtype";
   private final static String EVENTINFO = "eventinfo";
   
-  public JSONUtil() {
+  public JSON() {
     gson = new Gson();
   }
   
-  public void setEntities(String str) {
-    array = gson.fromJson(str, JsonObject.class).
-        get(ENTITIES).getAsJsonArray();
+  public JSON(String str) {
+    this();
+    strJson = str;
+    object = gson.fromJson(str, JsonObject.class);
   }
   
-  public void setEvent(String str) {
-    object = gson.fromJson(str, JsonObject.class);
+  public void setEntities() {
+    array =  object.get(ENTITIES).getAsJsonArray();
   }
   
   public List<String> getEvents() {
@@ -165,5 +167,9 @@ public class JSONUtil {
         }
       }
     }
+  }
+  
+  public String getString() {
+    return strJson;
   }
 }

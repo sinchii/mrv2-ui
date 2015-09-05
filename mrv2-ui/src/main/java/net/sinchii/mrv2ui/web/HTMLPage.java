@@ -168,7 +168,7 @@ public class HTMLPage {
     return this;
   }
   
-  public static String getDispayDate(long time) {
+  public static String getDisplayDate(long time) {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd E HH:mm:ss z");
     return sdf.format(new Date(time));
   }

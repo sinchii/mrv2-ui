@@ -8,10 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import net.sinchii.mrv2ui.web.ErrorPage;
 import net.sinchii.mrv2ui.web.JobInfoPage;
 import net.sinchii.mrv2ui.web.MainPage;
+import net.sinchii.mrv2ui.web.TaskInfoPage;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -23,8 +25,13 @@ import org.apache.http.util.EntityUtils;
 @WebServlet(name="MRv2UIMain", urlPatterns={"/m/*"})
 public class MRv2UIMain extends HttpServlet {
 
-  private String initPath;
-  private static final String TLPATH = "/ws/v1/timeline/MAPREDUCE_JOB";
+  private String tlsAddress;
+  private static final String TLJPATH = "/ws/v1/timeline/MAPREDUCE_JOB";
+  private static final String TLTPATH = "/ws/v1/timeline/MAPREDUCE_TASK";
+  
+  private static final String JOBID = "JOBID";
+  private static final String WINDOWSTART = "windowStart";
+  private static final String WINDOWEND = "windowEnd";
   
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
@@ -33,7 +40,7 @@ public class MRv2UIMain extends HttpServlet {
     res.setContentType("text/html; charset=UTF-8");
     
     PrintWriter writer = res.getWriter();
-    contentsHandler(req.getPathInfo(), writer);
+    contentsHandler(req, writer);
     writer.close();
   }
   
@@ -42,27 +49,50 @@ public class MRv2UIMain extends HttpServlet {
     doGet(req, res);
   }
   
-  private void contentsHandler(String path, PrintWriter writer) {
+  private void contentsHandler(HttpServletRequest req, PrintWriter writer) {
+    String path = req.getPathInfo();
+    
     if (path == null) {
-      String result = getTLSRest(initPath, writer);
+      String result = getTLSRest(tlsAddress + TLJPATH, writer);
       if (result != null) {
-        new MainPage(writer, result);
+        JSON json = new JSON(result);
+        new MainPage(writer, json);
       }
     } else if (path.startsWith("/job_")) {
-      String result = getTLSRest(initPath + path, writer);
+      String result = getTLSRest(tlsAddress + TLJPATH + path, writer);
       if (result != null) {
-        new JobInfoPage(writer, result);
+        JSON json = new JSON(result);
+        HttpSession session = req.getSession();
+        session.setAttribute(JOBID, null);
+        session.setAttribute(WINDOWSTART, null);
+        session.setAttribute(WINDOWEND, null);
+        new JobInfoPage(writer, json);
+      }
+    } else if (path.startsWith("/task_")) {
+      //TODO
+      /**
+      String wStart = "";
+      String wEnd = "";
+      HttpSession session = req.getSession();
+      if (session != null) {
+        session.getAttribute(JOBID);
+        wStart = (String) session.getAttribute(WINDOWSTART);
+        wEnd = (String) session.getAttribute(WINDOWEND);
+      }
+      */
+      String result = getTLSRest(tlsAddress + TLTPATH, writer);
+      if (result != null) {
+        new TaskInfoPage(writer, result);
       }
     }
   }
   
   public void init() {
-    String tlsAddress = getServletConfig().getServletContext()
+    tlsAddress = getServletConfig().getServletContext()
         .getInitParameter(MRv2UIConfig.TLS_HTTP_ADDRESS);
     if (tlsAddress == null) {
       tlsAddress = MRv2UIConfig.DEFAULT_TLS_HTTP_ADDRESS;
     }
-    initPath = tlsAddress + TLPATH;
   }
   
   private String getTLSRest(String uri, PrintWriter writer) {
@@ -83,10 +113,8 @@ public class MRv2UIMain extends HttpServlet {
     } catch (Exception e) {
       e.printStackTrace();
       new ErrorPage(writer, 500);
-      writer.println(initPath);
       return null;
     }
     return str;
   }
-  
 }

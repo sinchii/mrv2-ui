@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.text.NumberFormat;
 import java.util.Map;
 
-import net.sinchii.mrv2ui.JSONUtil;
+import net.sinchii.mrv2ui.JSON;
 import net.sinchii.mrv2ui.MRv2JobCounterInfo.Value;
 import net.sinchii.mrv2ui.MRv2JobInfo;
 
@@ -13,14 +13,11 @@ public class JobInfoPage {
   private final static String TITLE = "Job Summary";
 
   private HTMLPage page;
-  private JSONUtil json;
-  private String str;
+  private JSON json;
   
-  public JobInfoPage(PrintWriter writer, String str) {
+  public JobInfoPage(PrintWriter writer, JSON json) {
     page = new HTMLPage(writer);
-    json = new JSONUtil();
-    this.str = str;
-    json.setEvent(str);
+    this.json = json;
     render();
   }
   
@@ -48,9 +45,9 @@ public class JobInfoPage {
       .tr().th("Status").td(info.getJobStatus())._("tr")
       .tr().th("Queue").td(info.getQueueName())._("tr")
       .tr().th("Started")
-        .td(HTMLPage.getDispayDate(info.getStartTime()))._("tr")
+        .td(HTMLPage.getDisplayDate(info.getStartTime()))._("tr")
       .tr().th("Finished")
-        .td(HTMLPage.getDispayDate(info.getFinishTime()))._("tr")
+        .td(HTMLPage.getDisplayDate(info.getFinishTime()))._("tr")
       .tr().th("Elapsed").td(HTMLPage.getElapsedTime(elapsed))._("tr")
       .tr().th("Map tasks")
         .td(Integer.toString(info.getMapTasks()))._("tr")
@@ -62,8 +59,7 @@ public class JobInfoPage {
     // Counter table
     page.h3("Counter Information");
     page.table("CounterInfo", "ui-widget-content").thead()
-      .tr().th("Counter Information")._("tr")
-      .tr().th("Group Name").th("Name").td("map").td("reduce").td("total")
+      .tr().th("Group Name").th("Name").th("MAP").th("REDUCE").th("TOTAL")
       ._("thead");
     page.tbody();
     NumberFormat nf = NumberFormat.getNumberInstance();

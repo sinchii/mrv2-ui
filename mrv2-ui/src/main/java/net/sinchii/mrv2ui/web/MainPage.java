@@ -2,7 +2,7 @@ package net.sinchii.mrv2ui.web;
 
 import java.io.PrintWriter;
 
-import net.sinchii.mrv2ui.JSONUtil;
+import net.sinchii.mrv2ui.JSON;
 import net.sinchii.mrv2ui.MRv2JobInfo;
 
 public class MainPage {
@@ -12,12 +12,12 @@ public class MainPage {
   private final static String TABLECLASS = "display";
   
   private HTMLPage page;
-  private JSONUtil json;
+  private JSON json;
   
-  public MainPage(PrintWriter writer, String str) {
+  public MainPage(PrintWriter writer, JSON json) {
     page = new HTMLPage(writer);
-    json = new JSONUtil();
-    json.setEntities(str);
+    this.json = json;
+    json.setEntities();
     render();
   }
   
@@ -50,9 +50,9 @@ public class MainPage {
       page.tr()
         .td().a("/mrv2-ui/m/" + info.getJobId(), info.getJobId())._("td")
         .td(info.getJobName()).td(info.getUserName())
-        .td(Long.toString(info.getSubmitTime()))
-        .td(Long.toString(info.getStartTime()))
-        .td(Long.toString(info.getFinishTime()))
+        .td(HTMLPage.getDisplayDate(info.getSubmitTime()))
+        .td(HTMLPage.getDisplayDate(info.getStartTime()))
+        .td(HTMLPage.getDisplayDate(info.getFinishTime()))
         .td(Integer.toString(info.getMapTasks()))
         .td(Integer.toString(info.getReduceTasks()))._("tr");
     }
