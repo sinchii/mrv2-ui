@@ -52,7 +52,7 @@ public class MRv2UIMain extends HttpServlet {
   private void contentsHandler(HttpServletRequest req, PrintWriter writer) {
     String path = req.getPathInfo();
     
-    if (path == null) {
+    if (path == null || path.equals("/")) {
       String result = getTLSRest(tlsAddress + TLJPATH, writer);
       if (result != null) {
         JSON json = new JSON(result);
@@ -63,26 +63,30 @@ public class MRv2UIMain extends HttpServlet {
       if (result != null) {
         JSON json = new JSON(result);
         HttpSession session = req.getSession();
-        session.setAttribute(JOBID, null);
-        session.setAttribute(WINDOWSTART, null);
-        session.setAttribute(WINDOWEND, null);
+        session.setAttribute(JOBID,
+            json.getMRv2JobInfo().getJobId());
+        session.setAttribute(WINDOWSTART,
+            Long.toString(json.getMRv2JobInfo().getSubmitTime()));
+        session.setAttribute(WINDOWEND,
+            Long.toString(json.getMRv2JobInfo().getFinishTime()));
         new JobInfoPage(writer, json);
       }
     } else if (path.startsWith("/task_")) {
       //TODO
-      /**
-      String wStart = "";
-      String wEnd = "";
+      String windowQuery = "";
+      String sessionJobId = "";
       HttpSession session = req.getSession();
       if (session != null) {
-        session.getAttribute(JOBID);
-        wStart = (String) session.getAttribute(WINDOWSTART);
-        wEnd = (String) session.getAttribute(WINDOWEND);
+        sessionJobId = (String) session.getAttribute(JOBID);
+        String wStart = (String) session.getAttribute(WINDOWSTART);
+        String wEnd = (String) session.getAttribute(WINDOWEND);
+        windowQuery = "?windowStart=" + wStart + "&windowEnd=" + wEnd;
       }
-      */
-      String result = getTLSRest(tlsAddress + TLTPATH, writer);
+      
+      String result = getTLSRest(tlsAddress + TLTPATH + windowQuery, writer);
       if (result != null) {
-        new TaskInfoPage(writer, result);
+        JSON json = new JSON(result, sessionJobId);
+        new TaskInfoPage(writer, json);
       }
     }
   }

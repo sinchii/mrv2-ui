@@ -11,6 +11,7 @@ import com.google.gson.JsonObject;
 public class JSON {
 
   private String strJson;
+  private String sessionJobId;
   Gson gson;
   JsonElement element;
   JsonObject object;
@@ -29,6 +30,11 @@ public class JSON {
     this();
     strJson = str;
     object = gson.fromJson(str, JsonObject.class);
+  }
+  
+  public JSON(String str, String jobId) {
+    this(str);
+    sessionJobId = jobId;
   }
   
   public void setEntities() {
@@ -171,5 +177,32 @@ public class JSON {
   
   public String getString() {
     return strJson;
+  }
+  
+  public String getSessionJobId() {
+    return sessionJobId;
+  }
+  
+  public MRv2TaskInfo getMRv2TaskInfo(int index, String jobId) {
+    String taskId =
+        array.get(index).getAsJsonObject().get("entity").getAsString();
+    if (!taskId.contains(jobId)) {
+      return null;
+    }
+    MRv2TaskInfo info = MRv2TaskInfo.getInstance();
+    info.setTaskId(taskId);
+    info.setStartTime(
+        array.get(index).getAsJsonObject().get("starttime").getAsLong());
+    JsonArray a = array.get(index).getAsJsonObject()
+        .get(EVENTS).getAsJsonArray();
+    for (int i = 0; i < a.size(); i++) {
+      JsonObject o = a.get(i).getAsJsonObject();
+      if (o.get(EVENTTYPE).getAsString().equals("TASK_FINISHED")) {
+        info.setFinishTime(
+            o.get(EVENTINFO).getAsJsonObject().get("FINISH_TIME").getAsLong());
+        break;
+      }
+    }
+    return info;
   }
 }

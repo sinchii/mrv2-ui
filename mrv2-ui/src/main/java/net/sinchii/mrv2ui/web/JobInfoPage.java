@@ -38,6 +38,7 @@ public class JobInfoPage {
     long elapsed = info.getFinishTime() - info.getStartTime();
     page.table("JobInfo", "ui-widget-content").thead()
       .tr().th("MapReduce Job Information")._("tr")._("thead");
+    
     page.tbody()
       .tr().th("MapReduce Job ID").td(info.getJobId())._("tr")
       .tr().th("MapReduce Job Name").td(info.getJobName())._("tr")
@@ -50,9 +51,11 @@ public class JobInfoPage {
         .td(HTMLPage.getDisplayDate(info.getFinishTime()))._("tr")
       .tr().th("Elapsed").td(HTMLPage.getElapsedTime(elapsed))._("tr")
       .tr().th("Map tasks")
-        .td(Integer.toString(info.getMapTasks()))._("tr")
+        .td().a("/mrv2-ui/m/task_" + info.getJobId(),
+            Integer.toString(info.getMapTasks()))._("td")._("tr")
       .tr().th("Reduce tasks")
-        .td(Integer.toString(info.getReduceTasks()))._("tr")
+        .td().a("/mrv2-ui/m/task_" + info.getJobId(),
+            Integer.toString(info.getReduceTasks()))._("td")._("tr")
       ;
     page._("tbody")._("table");
     
