@@ -197,12 +197,38 @@ public class JSON {
         .get(EVENTS).getAsJsonArray();
     for (int i = 0; i < a.size(); i++) {
       JsonObject o = a.get(i).getAsJsonObject();
+      // Succeeded Map Attempt 
+      if (o.get(EVENTTYPE).getAsString().equals("MAP_ATTEMPT_FINISHED")) {
+        if (o.get(EVENTINFO).getAsJsonObject()
+            .get("STATUS").getAsString().equals("SUCCEEDED")) {
+          setTaskAttemptInfo(info, o.get(EVENTINFO).getAsJsonObject());
+        }
+      }
+      // Succeeded Reduce Attempt
+      if (o.get(EVENTTYPE).getAsString().equals("REDUCE_ATTEMPT_FINISHED")) {
+        if (o.get(EVENTINFO).getAsJsonObject()
+            .get("STATUS").getAsString().equals("SUCCEEDED")) {
+          setTaskAttemptInfo(info, o.get(EVENTINFO).getAsJsonObject());
+          setReduceTaskAttemptInfo(info, o.get(EVENTINFO).getAsJsonObject());
+        }
+      }
       if (o.get(EVENTTYPE).getAsString().equals("TASK_FINISHED")) {
+        info.setTaskType(
+            o.get(EVENTINFO).getAsJsonObject().get("TASK_TYPE").getAsString());
         info.setFinishTime(
             o.get(EVENTINFO).getAsJsonObject().get("FINISH_TIME").getAsLong());
-        break;
       }
     }
     return info;
+  }
+  
+  private void setTaskAttemptInfo(MRv2TaskInfo info, JsonObject o) {
+    info.setHostName(o.get("HOSTNAME").getAsString());
+    info.setRackName(o.get("RACK_NAME").getAsString());
+  }
+  
+  private void setReduceTaskAttemptInfo(MRv2TaskInfo info, JsonObject o) {
+    info.setShuffleFinishTime(o.get("SHUFFLE_FINISH_TIME").getAsLong());
+    info.setSortFinishTime(o.get("SORT_FINISH_TIME").getAsLong());
   }
 }

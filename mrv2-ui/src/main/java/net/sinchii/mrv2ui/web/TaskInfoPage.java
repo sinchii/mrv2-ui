@@ -42,16 +42,30 @@ public class TaskInfoPage {
     page.h3(jobId + " Task List");
     
     page.table(TABLENAME, TABLECLASS).thead().tr()
-      .th("taskid", "Task ID").th("starttime", "Start Time")
+      .th("taskid", "Task ID")
+      .th("tasktype", "Task Type")
+      .th("hostname", "Host Name")
+      .th("rackname", "Rack Name")
+      .th("starttime", "Start Time")
+      .th("shufflefinishtime", "Shuffle Finish Time")
+      .th("sortfinishtime", "Sort Finish Time")
       .th("finishtime", "Finish Time")._("tr")._("thead");
     page.tbody();
     String id = jobId.substring(4);
     for (int i = 0; i < json.getNumEvents(); i++) {
       MRv2TaskInfo info = json.getMRv2TaskInfo(i, id);
       if (info != null) {
+        String t = info.getTaskType();
         page.tr()
           .td(info.getTaskId())
+          .td(t)
+          .td(info.getHostName())
+          .td(info.getRackName())
           .td(HTMLPage.getDisplayDate(info.getStartTime()))
+          .td(t.equals("MAP") ?
+              "" : HTMLPage.getDisplayDate(info.getShuffleFinishTime()))
+          .td(t.equals("MAP") ?
+              "" : HTMLPage.getDisplayDate(info.getSortFinishTime()))
           .td(HTMLPage.getDisplayDate(info.getFinishTime()))._("tr");
       }
     }
