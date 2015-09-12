@@ -28,15 +28,16 @@ public class JobInfoPage {
       .meta_http("Content-type", "text/html; charset=UTF-8")
       .meta_http("Content-Style-Type", "text/css")
       .title(TITLE + " : " + info.getJobId());
-    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
-    page.link("stylesheet", "/mrv2-ui/static/jquery/dataTables.jqueryui.min.css");
+    page.link("stylesheet", "/mrv2-ui/static/mrv2ui.css");
+    //page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
+    //page.link("stylesheet", "/mrv2-ui/static/jquery/dataTables.jqueryui.min.css");
     page._("head").body();
     
     // Job Info table
     page.h3(info.getJobId());
     
     long elapsed = info.getFinishTime() - info.getStartTime();
-    page.table("JobInfo", "ui-widget-content").thead()
+    page.table("JobInfo", "zebra").thead()
       .tr().th("MapReduce Job Information")._("tr")._("thead");
     
     page.tbody()
@@ -61,7 +62,7 @@ public class JobInfoPage {
     
     // Counter table
     page.h3("Counter Information");
-    page.table("CounterInfo", "info").thead()
+    page.table("CounterInfo", "zebra").thead()
       .tr().th("Group Name").th("Name").th("MAP").th("REDUCE").th("TOTAL")
       ._("thead");
     page.tbody();
@@ -69,13 +70,14 @@ public class JobInfoPage {
     Map<String, Map<String, Value>> counters = info.getCounterInfo().getCounters();
     for (String gkey : counters.keySet()) {
       Map<String, Value> counter = counters.get(gkey);
+      String bgkey = "";
       for (String key : counter.keySet()) {
-        
-        page.tr().th(gkey).th(key)
+        page.tr().th(bgkey.equals(gkey) ? "" : gkey).th(key)
           .td(nf.format(counter.get(key).getMapValue()))
           .td(nf.format(counter.get(key).getReduceValue()))
           .td(nf.format(counter.get(key).getTotalValue()))
           ._("tr");
+        bgkey = gkey;
       }
     }
     page._("tbody");
