@@ -130,8 +130,13 @@ public class HTMLPage {
     return this;
   }
   
+  public HTMLPage div(String clazz) {
+    out.println("<div class=\"" + clazz + "\">");
+    return this;
+  }
+  
   public HTMLPage div(String id, String clazz) {
-    out.println("<div id=\"" + clazz + "\" class=\"" + clazz + "\"");
+    out.println("<div id=\"" + clazz + "\" class=\"" + clazz + "\">");
     return this;
   }
 

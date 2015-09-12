@@ -31,11 +31,11 @@ public class TaskInfoPage {
     page.script("text/javascript",
         "/mrv2-ui/static/jquery/jquery-1.11.3.min.js")._("script");
     page.script("text/javascript",
-        "/mrv2-ui/static/jquery/jquery-ui.min.js")._("script");
-    page.script("text/javascript",
         "/mrv2-ui/static/jquery/jquery.dataTables.min.js")._("script");
+    page.script("text/javascript",
+        "/mrv2-ui/static/jquery/dataTables.jqueryui.min.js")._("script");
     page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
-    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery.dataTables.css");
+    page.link("stylesheet", "/mrv2-ui/static/jquery/dataTables.jqueryui.min.css");
     page.script().dataTable(TABLENAME)._("script");
     page._("head").body();
     

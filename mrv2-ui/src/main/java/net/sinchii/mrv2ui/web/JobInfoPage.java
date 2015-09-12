@@ -29,7 +29,7 @@ public class JobInfoPage {
       .meta_http("Content-Style-Type", "text/css")
       .title(TITLE + " : " + info.getJobId());
     page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
-    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery.dataTables.css");
+    page.link("stylesheet", "/mrv2-ui/static/jquery/dataTables.jqueryui.min.css");
     page._("head").body();
     
     // Job Info table
@@ -61,7 +61,7 @@ public class JobInfoPage {
     
     // Counter table
     page.h3("Counter Information");
-    page.table("CounterInfo", "ui-widget-content").thead()
+    page.table("CounterInfo", "info").thead()
       .tr().th("Group Name").th("Name").th("MAP").th("REDUCE").th("TOTAL")
       ._("thead");
     page.tbody();
@@ -79,6 +79,7 @@ public class JobInfoPage {
       }
     }
     page._("tbody");
-    page._("table")._("body")._("html");
+    page._("table");
+    page._("body")._("html");
   }
 }
