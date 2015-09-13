@@ -81,6 +81,8 @@ public class MRv2UIMain extends HttpServlet {
         String wStart = (String) session.getAttribute(WINDOWSTART);
         String wEnd = (String) session.getAttribute(WINDOWEND);
         windowQuery = "?windowStart=" + wStart + "&windowEnd=" + wEnd;
+      } else {
+        sessionJobId = path.substring(5);
       }
       
       String result = getTLSRest(tlsAddress + TLTPATH + windowQuery, writer);
