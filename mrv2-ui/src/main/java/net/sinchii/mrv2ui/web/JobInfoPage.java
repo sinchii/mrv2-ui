@@ -29,17 +29,14 @@ public class JobInfoPage {
       .meta_http("Content-Style-Type", "text/css")
       .title(TITLE + " : " + info.getJobId());
     page.link("stylesheet", "/mrv2-ui/static/mrv2ui.css");
-    //page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
-    //page.link("stylesheet", "/mrv2-ui/static/jquery/dataTables.jqueryui.min.css");
     page._("head").body();
     
     // Job Info table
-    page.h3(info.getJobId());
+    page.h3("MapReduce Job Information : " + info.getJobId());
     
     long elapsed = info.getFinishTime() - info.getStartTime();
     page.table("JobInfo", "zebra").thead()
-      .tr().th("MapReduce Job Information")._("tr")._("thead");
-    
+      .tr()._("tr")._("thead");
     page.tbody()
       .tr().th("MapReduce Job ID").td(info.getJobId())._("tr")
       .tr().th("MapReduce Job Name").td(info.getJobName())._("tr")

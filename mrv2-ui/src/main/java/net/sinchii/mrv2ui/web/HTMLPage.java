@@ -179,13 +179,14 @@ public class HTMLPage {
   }
   
   public static String getElapsedTime(long time) {
+    long sec10 = (time / 100) % 10;
     long sec = (time / 1000) % 60;
     long min = (time / 60 / 1000);
     long hour = (time / 60 / 60 / 1000);
     String timeStr =
         ((hour > 0) ? hour + " hour": "")
         + ((min > 0) ? min + " min" : "")
-        + ((sec > 0) ? sec + " sec" : "");
+        + ((sec > 0) ? sec + "." + sec10 + " sec" : "");
     return timeStr;
   }
 }
