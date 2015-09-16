@@ -160,6 +160,11 @@ public class HTMLPage {
     return this;
   }
   
+  public HTMLPage br() {
+    out.println("<br />");
+    return this;
+  }
+  
   public HTMLPage _(String tag) {
     out.println("</" + tag + ">");
     return this;

@@ -42,17 +42,20 @@ public class MainPage {
     page.table(TABLENAME, TABLECLASS).thead().tr()
       .th("jobid", "Job ID").th("jobname", "Job Name").th("user", "User")
       .th("submittime", "Submit Time").th("startime", "Start Time")
-      .th("finsihtime", "Finish Time").th("maptasks", "Map Tasks")
+      .th("finsihtime", "Finish Time").th("elapsedtime", "Elapsed Time")
+      .th("maptasks", "Map Tasks")
       .th("reducetasks", "Reduce Tasks")._("tr")._("thead");
     page.tbody();
     for (int i = 0; i < json.getNumEvents(); i++) {
       MRv2JobInfo info = json.getMRv2JobInfo(i);
+      long elapsed = info.getFinishTime() - info.getStartTime();
       page.tr()
         .td().a("/mrv2-ui/m/" + info.getJobId(), info.getJobId())._("td")
         .td(info.getJobName()).td(info.getUserName())
         .td(HTMLPage.getDisplayDate(info.getSubmitTime()))
         .td(HTMLPage.getDisplayDate(info.getStartTime()))
         .td(HTMLPage.getDisplayDate(info.getFinishTime()))
+        .td(HTMLPage.getElapsedTime(elapsed))
         .td(Integer.toString(info.getMapTasks()))
         .td(Integer.toString(info.getReduceTasks()))._("tr");
     }
