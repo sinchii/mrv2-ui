@@ -1,13 +1,13 @@
-package net.sinchii.mrv2ui;
+package net.sinchii.mrv2ui.dao;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MRv2JobCounterInfo {
+public class JobCounterInfo {
 
   private Map<String, Map<String, Value>> counter;
   
-  public MRv2JobCounterInfo() {
+  public JobCounterInfo() {
     counter = new HashMap<String, Map<String, Value>>();
   }
   
@@ -93,7 +93,7 @@ public class MRv2JobCounterInfo {
     }
   }
   
-  public static MRv2JobCounterInfo getInstance() {
-    return new MRv2JobCounterInfo();
+  public static JobCounterInfo getInstance() {
+    return new JobCounterInfo();
   }
 }

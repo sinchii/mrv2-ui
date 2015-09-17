@@ -1,6 +1,7 @@
-package net.sinchii.mrv2ui;
+package net.sinchii.mrv2ui.dao;
 
-public class MRv2JobInfo {
+
+public class JobInfo {
 
   private String containerId;
   private String jobId;
@@ -18,7 +19,7 @@ public class MRv2JobInfo {
   private String queueName;
   
   // CounterInfo
-  private MRv2JobCounterInfo counterInfo;
+  private JobCounterInfo counterInfo;
   
   public void setContainerId(String id) {
     containerId = id;
@@ -64,7 +65,7 @@ public class MRv2JobInfo {
     queueName = queue;
   }
   
-  public void setCounterInfo(MRv2JobCounterInfo info) {
+  public void setCounterInfo(JobCounterInfo info) {
     counterInfo = info;
   }
   
@@ -112,11 +113,11 @@ public class MRv2JobInfo {
     return queueName;
   }
   
-  public MRv2JobCounterInfo getCounterInfo() {
+  public JobCounterInfo getCounterInfo() {
     return counterInfo;
   }
   
-  public static MRv2JobInfo getInstance() {
-    return new MRv2JobInfo();
+  public static JobInfo getInstance() {
+    return new JobInfo();
   }
 }

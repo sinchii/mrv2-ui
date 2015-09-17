@@ -3,7 +3,7 @@ package net.sinchii.mrv2ui.web;
 import java.io.PrintWriter;
 
 import net.sinchii.mrv2ui.JSON;
-import net.sinchii.mrv2ui.MRv2TaskInfo;
+import net.sinchii.mrv2ui.dao.TaskInfo;
 
 public class TaskInfoPage {
 
@@ -69,7 +69,7 @@ public class TaskInfoPage {
       .th("elapsedtime", "Elapsed Time")._("tr")._("thead");
     page.tbody();
     for (int i = 0; i < json.getNumEvents(); i++) {
-      MRv2TaskInfo info = json.getMRv2TaskInfo(i, id);
+      TaskInfo info = json.getMRv2TaskInfo(i, id);
       if (info != null) {
         String t = info.getTaskType();
         long elapsed = info.getFinishTime() - info.getStartTime();
