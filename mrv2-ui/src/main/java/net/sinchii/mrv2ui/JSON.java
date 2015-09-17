@@ -3,6 +3,10 @@ package net.sinchii.mrv2ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.sinchii.mrv2ui.dao.JobCounterInfo;
+import net.sinchii.mrv2ui.dao.JobInfo;
+import net.sinchii.mrv2ui.dao.TaskInfo;
+
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -81,8 +85,8 @@ public class JSON {
     return -1;
   }
   
-  public MRv2JobInfo getMRv2JobInfo(int index) {
-    MRv2JobInfo info = MRv2JobInfo.getInstance();
+  public JobInfo getMRv2JobInfo(int index) {
+    JobInfo info = JobInfo.getInstance();
     info.setJobId(array.get(index).getAsJsonObject().
         get("entity").getAsString());
     
@@ -92,15 +96,15 @@ public class JSON {
     return info;
   }
   
-  public MRv2JobInfo getMRv2JobInfo() {
-    MRv2JobInfo info = MRv2JobInfo.getInstance();
+  public JobInfo getMRv2JobInfo() {
+    JobInfo info = JobInfo.getInstance();
     info.setJobId(object.get("entity").getAsString());
     setMRv2JobResult(info, object.get(EVENTS).getAsJsonArray());
     setMRv2JobResultCounter(info, object.get(EVENTS).getAsJsonArray());
     return info;
   }
   
-  private void setMRv2JobResult(MRv2JobInfo info, JsonArray array) {
+  private void setMRv2JobResult(JobInfo info, JsonArray array) {
     for (int i = 0; i < array.size(); i++) {
       JsonObject o = array.get(i).getAsJsonObject();
       if (o.get(EVENTTYPE).getAsString().equals("AM_STARTED")) {
@@ -134,8 +138,8 @@ public class JSON {
     }
   }
   
-  private void setMRv2JobResultCounter(MRv2JobInfo info, JsonArray array) {
-    MRv2JobCounterInfo counterInfo = MRv2JobCounterInfo.getInstance();
+  private void setMRv2JobResultCounter(JobInfo info, JsonArray array) {
+    JobCounterInfo counterInfo = JobCounterInfo.getInstance();
     for (int i = 0; i < array.size(); i++) {
       JsonObject o = array.get(i).getAsJsonObject();
       if (o.get(EVENTTYPE).getAsString().equals("JOB_FINISHED")) {
@@ -155,7 +159,7 @@ public class JSON {
   }
   
   private void parseCounterValue(
-      MRv2JobCounterInfo info, JsonArray array, String type) {
+      JobCounterInfo info, JsonArray array, String type) {
     for (int i = 0; i < array.size(); i++) {
       JsonObject o = array.get(i).getAsJsonObject();
       String groupName = o.get("DISPLAY_NAME").getAsString();
@@ -183,13 +187,13 @@ public class JSON {
     return sessionJobId;
   }
   
-  public MRv2TaskInfo getMRv2TaskInfo(int index, String jobId) {
+  public TaskInfo getMRv2TaskInfo(int index, String jobId) {
     String taskId =
         array.get(index).getAsJsonObject().get("entity").getAsString();
     if (!taskId.contains(jobId)) {
       return null;
     }
-    MRv2TaskInfo info = MRv2TaskInfo.getInstance();
+    TaskInfo info = TaskInfo.getInstance();
     info.setTaskId(taskId);
     info.setStartTime(
         array.get(index).getAsJsonObject().get("starttime").getAsLong());
@@ -222,12 +226,12 @@ public class JSON {
     return info;
   }
   
-  private void setTaskAttemptInfo(MRv2TaskInfo info, JsonObject o) {
+  private void setTaskAttemptInfo(TaskInfo info, JsonObject o) {
     info.setHostName(o.get("HOSTNAME").getAsString());
     info.setRackName(o.get("RACK_NAME").getAsString());
   }
   
-  private void setReduceTaskAttemptInfo(MRv2TaskInfo info, JsonObject o) {
+  private void setReduceTaskAttemptInfo(TaskInfo info, JsonObject o) {
     info.setShuffleFinishTime(o.get("SHUFFLE_FINISH_TIME").getAsLong());
     info.setSortFinishTime(o.get("SORT_FINISH_TIME").getAsLong());
   }

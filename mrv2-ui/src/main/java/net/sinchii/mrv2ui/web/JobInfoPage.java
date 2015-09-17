@@ -5,8 +5,8 @@ import java.text.NumberFormat;
 import java.util.Map;
 
 import net.sinchii.mrv2ui.JSON;
-import net.sinchii.mrv2ui.MRv2JobCounterInfo.Value;
-import net.sinchii.mrv2ui.MRv2JobInfo;
+import net.sinchii.mrv2ui.dao.JobInfo;
+import net.sinchii.mrv2ui.dao.JobCounterInfo.Value;
 
 public class JobInfoPage {
 
@@ -22,7 +22,7 @@ public class JobInfoPage {
   }
   
   public void render() {
-    MRv2JobInfo info = json.getMRv2JobInfo();
+    JobInfo info = json.getMRv2JobInfo();
     page.output(HTMLPage.DOCTYPE);
     page.html().head().meta_http("X-UA-Compatible", "IE=8")
       .meta_http("Content-type", "text/html; charset=UTF-8")

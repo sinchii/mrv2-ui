@@ -1,6 +1,7 @@
-package net.sinchii.mrv2ui;
+package net.sinchii.mrv2ui.dao;
 
-public class MRv2TaskInfo {
+
+public class TaskInfo {
   
   private String taskId;
   private String taskType;
@@ -12,7 +13,7 @@ public class MRv2TaskInfo {
   private long finishTime;
   
   // CounterInfo
-  private MRv2JobCounterInfo counterInfo;
+  private JobCounterInfo counterInfo;
   
   public void setTaskId(String id) {
     taskId = id;
@@ -46,7 +47,7 @@ public class MRv2TaskInfo {
     finishTime = time;
   }
   
-  public void setCounterInfo(MRv2JobCounterInfo info) {
+  public void setCounterInfo(JobCounterInfo info) {
     counterInfo = info;
   }
   
@@ -82,11 +83,11 @@ public class MRv2TaskInfo {
     return finishTime;
   }
   
-  public MRv2JobCounterInfo getCounterInfo() {
+  public JobCounterInfo getCounterInfo() {
     return counterInfo;
   }
   
-  public static MRv2TaskInfo getInstance() {
-    return new MRv2TaskInfo();
+  public static TaskInfo getInstance() {
+    return new TaskInfo();
   }
 }

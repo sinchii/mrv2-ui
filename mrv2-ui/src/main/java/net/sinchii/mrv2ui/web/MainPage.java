@@ -3,7 +3,7 @@ package net.sinchii.mrv2ui.web;
 import java.io.PrintWriter;
 
 import net.sinchii.mrv2ui.JSON;
-import net.sinchii.mrv2ui.MRv2JobInfo;
+import net.sinchii.mrv2ui.dao.JobInfo;
 
 public class MainPage {
 
@@ -47,7 +47,7 @@ public class MainPage {
       .th("reducetasks", "Reduce Tasks")._("tr")._("thead");
     page.tbody();
     for (int i = 0; i < json.getNumEvents(); i++) {
-      MRv2JobInfo info = json.getMRv2JobInfo(i);
+      JobInfo info = json.getMRv2JobInfo(i);
       long elapsed = info.getFinishTime() - info.getStartTime();
       page.tr()
         .td().a("/mrv2-ui/m/" + info.getJobId(), info.getJobId())._("td")
