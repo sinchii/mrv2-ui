@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sinchii.mrv2ui.web.ErrorPage;
+import net.sinchii.mrv2ui.web.JobInfoCSV;
 import net.sinchii.mrv2ui.web.JobInfoPage;
 import net.sinchii.mrv2ui.web.MainPage;
 import net.sinchii.mrv2ui.web.TaskInfoPage;
@@ -72,7 +73,6 @@ public class MRv2UIMain extends HttpServlet {
         new JobInfoPage(writer, json);
       }
     } else if (path.startsWith("/task_")) {
-      //TODO
       String windowQuery = "";
       String sessionJobId = "";
       HttpSession session = req.getSession();
@@ -89,6 +89,12 @@ public class MRv2UIMain extends HttpServlet {
       if (result != null) {
         JSON json = new JSON(result, sessionJobId);
         new TaskInfoPage(writer, json);
+      }
+    } else if (path.startsWith("/csv")) {
+      String result = getTLSRest(tlsAddress + TLJPATH, writer);
+      if (result != null) {
+        JSON json = new JSON(result);
+        new JobInfoCSV(writer, json);
       }
     }
   }

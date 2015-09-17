@@ -21,10 +21,11 @@ public class JSON {
   JsonObject object;
   JsonArray array;
   
-  public final static String ENTITIES = "entities";
-  public final static String EVENTS = "events";
+  private final static String ENTITIES = "entities";
+  private final static String EVENTS = "events";
   private final static String EVENTTYPE = "eventtype";
   private final static String EVENTINFO = "eventinfo";
+  private final static String ENTITY = "entity";
   
   public JSON() {
     gson = new Gson();
@@ -88,17 +89,18 @@ public class JSON {
   public JobInfo getMRv2JobInfo(int index) {
     JobInfo info = JobInfo.getInstance();
     info.setJobId(array.get(index).getAsJsonObject().
-        get("entity").getAsString());
+        get(ENTITY).getAsString());
     
     JsonArray e = array.get(index).getAsJsonObject().
         get(EVENTS).getAsJsonArray();
     setMRv2JobResult(info, e);
+    setMRv2JobResultCounter(info, e);
     return info;
   }
   
   public JobInfo getMRv2JobInfo() {
     JobInfo info = JobInfo.getInstance();
-    info.setJobId(object.get("entity").getAsString());
+    info.setJobId(object.get(ENTITY).getAsString());
     setMRv2JobResult(info, object.get(EVENTS).getAsJsonArray());
     setMRv2JobResultCounter(info, object.get(EVENTS).getAsJsonArray());
     return info;
@@ -189,7 +191,7 @@ public class JSON {
   
   public TaskInfo getMRv2TaskInfo(int index, String jobId) {
     String taskId =
-        array.get(index).getAsJsonObject().get("entity").getAsString();
+        array.get(index).getAsJsonObject().get(ENTITY).getAsString();
     if (!taskId.contains(jobId)) {
       return null;
     }
