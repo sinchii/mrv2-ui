@@ -27,6 +27,7 @@ public class HTMLPage {
   public static final String DOCTYPE =
       "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01//EN\""
           + " \"http://www.w3.org/TR/html4/strict.dtd\">";
+  public static final String HOME = "/mrv2-ui/m/";
   public static final String JQMINJS =
       "/mrv2-ui/static/jquery/jquery-1.11.3.min.js";
   public static final String JQDTMINJS =

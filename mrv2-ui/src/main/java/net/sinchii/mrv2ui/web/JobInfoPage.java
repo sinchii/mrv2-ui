@@ -95,7 +95,7 @@ public class JobInfoPage {
     }
     page._("tbody");
     page._("table");
-    page.br().a("/mrv2-ui/m/", "Back");
+    page.br().a(HTMLPage.HOME, "Back");
     page._("body")._("html");
   }
 }

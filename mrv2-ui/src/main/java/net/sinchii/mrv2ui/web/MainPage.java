@@ -63,7 +63,7 @@ public class MainPage {
       JobInfo info = json.getMRv2JobInfo(i);
       long elapsed = info.getFinishTime() - info.getStartTime();
       page.tr()
-        .td().a("/mrv2-ui/m/" + info.getJobId(), info.getJobId())._("td")
+        .td().a(HTMLPage.HOME + info.getJobId(), info.getJobId())._("td")
         .td(info.getJobName()).td(info.getUserName())
         .td(HTMLPage.getDisplayDate(info.getSubmitTime()))
         .td(HTMLPage.getDisplayDate(info.getStartTime()))

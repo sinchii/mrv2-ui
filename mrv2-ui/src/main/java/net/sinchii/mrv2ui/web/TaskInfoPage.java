@@ -152,7 +152,7 @@ public class TaskInfoPage {
         .td(reduceTasks > 0 ? HTMLPage.getElapsedTime(reduceTaskMimimumTime)
             + " (" + reduceTaskIdMinimumTime + ")" : "")._("tr");
     page._("tbody")._("table");
-    page.br().a("/mrv2-ui/m/" + jobId, "Back");
+    page.br().a(HTMLPage.HOME + jobId, "Back");
     page._("body")._("html");
     
   }
