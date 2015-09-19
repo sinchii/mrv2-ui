@@ -1,5 +1,4 @@
 # MRv2 UI 
---------------------------------------------------------------
 
 ## Overview
 
@@ -49,12 +48,10 @@ MRv2 UI provides the following information.
         http://${TOMCAT_ADDRESS}:${TOMCAT_PORT}/mrv2-ui/
 
 # License
----------------------------------------------------------------------------
 
-Apache License, Version 2.0
+[Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 
 # Author
------------
 
 Shinchi Yamashita / @\_sinchii\_

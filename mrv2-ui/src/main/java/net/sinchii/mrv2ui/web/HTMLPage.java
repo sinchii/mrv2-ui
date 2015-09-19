@@ -217,8 +217,8 @@ public class HTMLPage {
     long min = (time / 60 / 1000);
     long hour = (time / 60 / 60 / 1000);
     String timeStr =
-        ((hour > 0) ? hour + " hour": "")
-        + ((min > 0) ? min + " min" : "")
+        ((hour > 0) ? hour + " hour ": "")
+        + ((min > 0) ? min + " min " : "")
         + ((sec > 0) ? sec + "." + sec10 + " sec" : "");
     return timeStr;
   }

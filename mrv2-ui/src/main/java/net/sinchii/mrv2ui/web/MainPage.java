@@ -73,6 +73,7 @@ public class MainPage {
         .td(Integer.toString(info.getReduceTasks()))._("tr");
     }
     page._("tbody")._("table");
+    page.br().a(HTMLPage.HOME + "/csv", "CSV");
     page._("body")._("html");
   }
 }
