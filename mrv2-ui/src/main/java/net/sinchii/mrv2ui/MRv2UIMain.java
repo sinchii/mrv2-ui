@@ -1,3 +1,19 @@
+/**
+ * Copyright (c) 2015 Shinichi YAMASHITA
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package net.sinchii.mrv2ui;
 
 import java.io.IOException;
@@ -17,6 +33,7 @@ import net.sinchii.mrv2ui.web.MainPage;
 import net.sinchii.mrv2ui.web.TaskInfoPage;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -115,7 +132,7 @@ public class MRv2UIMain extends HttpServlet {
     try {
       CloseableHttpResponse response = client.execute(httpGet);
       int code = response.getStatusLine().getStatusCode();
-      if (code != 200) {
+      if (code != HttpStatus.SC_OK) {
         System.out.println(uri);
         new ErrorPage(writer, code);
         return null;
@@ -124,7 +141,7 @@ public class MRv2UIMain extends HttpServlet {
       str = EntityUtils.toString(entity);
     } catch (Exception e) {
       e.printStackTrace();
-      new ErrorPage(writer, 500);
+      new ErrorPage(writer, HttpStatus.SC_INTERNAL_SERVER_ERROR);
       return null;
     }
     return str;
