@@ -44,7 +44,7 @@ public class JobInfoPage {
       .meta_http("Content-type", "text/html; charset=UTF-8")
       .meta_http("Content-Style-Type", "text/css")
       .title(TITLE + " : " + info.getJobId());
-    page.link("stylesheet", "/mrv2-ui/static/mrv2ui.css");
+    page.link("stylesheet", HTMLPage.MRV2UICSS);
     page._("head").body();
     
     // Job Info table

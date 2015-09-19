@@ -42,15 +42,11 @@ public class MainPage {
     page.html().head().meta_http("X-UA-Compatible", "IE=8")
       .meta_http("Content-type", "text/html; charset=UTF-8")
       .title(TITLE);
-    page.script("text/javascript",
-        "/mrv2-ui/static/jquery/jquery-1.11.3.min.js")._("script");
-    page.script("text/javascript",
-        "/mrv2-ui/static/jquery/jquery.dataTables.min.js")._("script");
-    page.script("text/javascript",
-        "/mrv2-ui/static/jquery/dataTables.jqueryui.min.js")._("script");
-    page.link("stylesheet", "/mrv2-ui/static/jquery/jquery-ui.css");
-    page.link("stylesheet",
-        "/mrv2-ui/static/jquery/dataTables.jqueryui.min.css");
+    page.script("text/javascript", HTMLPage.JQMINJS)._("script");
+    page.script("text/javascript", HTMLPage.JQDTMINJS)._("script");
+    page.script("text/javascript", HTMLPage.DTJQMINJS)._("script");
+    page.link("stylesheet", HTMLPage.JQUICSS);
+    page.link("stylesheet", HTMLPage.DTJQUIMINCSS);
     page.script().dataTable(TABLENAME)._("script");
     page._("head").body();
     

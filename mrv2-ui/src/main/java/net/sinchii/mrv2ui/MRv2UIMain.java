@@ -33,6 +33,7 @@ import net.sinchii.mrv2ui.web.MainPage;
 import net.sinchii.mrv2ui.web.TaskInfoPage;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -131,7 +132,7 @@ public class MRv2UIMain extends HttpServlet {
     try {
       CloseableHttpResponse response = client.execute(httpGet);
       int code = response.getStatusLine().getStatusCode();
-      if (code != 200) {
+      if (code != HttpStatus.SC_OK) {
         System.out.println(uri);
         new ErrorPage(writer, code);
         return null;
@@ -140,7 +141,7 @@ public class MRv2UIMain extends HttpServlet {
       str = EntityUtils.toString(entity);
     } catch (Exception e) {
       e.printStackTrace();
-      new ErrorPage(writer, 500);
+      new ErrorPage(writer, HttpStatus.SC_INTERNAL_SERVER_ERROR);
       return null;
     }
     return str;
