@@ -75,6 +75,7 @@ public class JobInfoCSV {
           + c.get(CGMR).get(COUNTERNAME[10]).getMapValue() + ","
           + c.get(CGMR).get(COUNTERNAME[10]).getReduceValue() + ","
           );
+      page.br();
     }
   }
   
