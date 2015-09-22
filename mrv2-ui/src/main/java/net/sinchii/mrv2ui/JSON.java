@@ -249,12 +249,16 @@ public class JSON {
     }
     TaskInfo info = TaskInfo.getInstance();
     info.setTaskId(taskId);
-    info.setStartTime(
-        array.get(index).getAsJsonObject().get("starttime").getAsLong());
     JsonArray a = array.get(index).getAsJsonObject()
         .get(EVENTS).getAsJsonArray();
     for (int i = 0; i < a.size(); i++) {
       JsonObject o = a.get(i).getAsJsonObject();
+      // Started Map Attempt
+      if (o.get(EVENTTYPE).getAsString().equals("MAP_ATTEMPT_STARTED") ||
+          o.get(EVENTTYPE).getAsString().equals("REDUCE_ATTEMPT_STARTED")) {
+        info.setStartTime(
+            o.get(EVENTINFO).getAsJsonObject().get("START_TIME").getAsLong());
+      }
       // Succeeded Map Attempt 
       if (o.get(EVENTTYPE).getAsString().equals("MAP_ATTEMPT_FINISHED")) {
         if (o.get(EVENTINFO).getAsJsonObject()
