@@ -3,7 +3,7 @@
 ## Overview
 
 "MRv2 UI" is a web interface of job history of Hadoop MapReduce v2(MRv2) and works on Apache Tomcat.
-MRv2 is run on Hadoop YARN environment. And MRv2 UI uses the information of Hadoop YARN environment.
+MRv2 is run on Hadoop YARN environment. And MRv2 UI uses the information of Hadoop YARN environment. MRv2 UI aims to run in the same Tomcat as Tez UI.
 
 MRv2 UI provides the following information.
 
@@ -17,7 +17,7 @@ MRv2 UI provides the following information.
 * Apache Tomcat 8+
 * Apache Maven 3+
 
-* Running Hadoop YARN TimelineServer
+* Running Hadoop YARN TimelineServer (Apache Hadoop 2.6+)
 
 ## How to build and install
 
@@ -30,7 +30,7 @@ MRv2 UI provides the following information.
         $ cd mrv2-ui
         $ mvn clean package
 
-  * (optional) Start Tomcat
+  * (if needed) Start Tomcat
 
         $ ${TOMCAT_HOME}/bin/catalina.sh start
 
@@ -46,6 +46,12 @@ MRv2 UI provides the following information.
   * Access to MRv2 UI page
 
         http://${TOMCAT_ADDRESS}:${TOMCAT_PORT}/mrv2-ui/
+
+# Sample images
+
+  * [MapReduce job list](https://gist.github.com/sinchii/9572774d657a28192f97#file-mrv2ui-joblist-png)
+  * [MapReduce job information](https://gist.github.com/sinchii/9572774d657a28192f97#file-mrv2ui-job-png)
+  * [MapReduce task information](https://gist.github.com/sinchii/9572774d657a28192f97#file-mrv2ui-task-png)
 
 # License
 
