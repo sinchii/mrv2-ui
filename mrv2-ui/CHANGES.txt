@@ -1,0 +1,7 @@
+MRv2 UI Change Log
+
+Release 0.1.0 - 2015-09-22
+
+  * Add display MapReduce v2 job list
+  * Add display MapReduce v2 job summary
+  * Add display task list of MapReduce v2 job
