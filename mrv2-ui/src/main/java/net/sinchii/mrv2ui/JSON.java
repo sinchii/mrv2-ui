@@ -32,25 +32,25 @@ public class JSON {
 
   private String strJson;
   private String sessionJobId;
-  Gson gson;
   JsonElement element;
   JsonObject object;
   JsonArray array;
+  private long minimumTime;
   
   private final static String ENTITIES = "entities";
   private final static String EVENTS = "events";
   private final static String EVENTTYPE = "eventtype";
   private final static String EVENTINFO = "eventinfo";
   private final static String ENTITY = "entity";
+  private final static String STARTTIME = "starttime";
   
-  public JSON() {
-    gson = new Gson();
-  }
+  public JSON() { }
   
   public JSON(String str) {
-    this();
+    Gson gson = new Gson();
     strJson = str;
     object = gson.fromJson(str, JsonObject.class);
+    minimumTime = Long.MAX_VALUE;
   }
   
   public JSON(String str, String jobId) {
@@ -60,6 +60,42 @@ public class JSON {
   
   public void setEntities() {
     array =  object.get(ENTITIES).getAsJsonArray();
+  }
+  
+  public void setTaskEntities(String entityFilter) {
+    array = object.get(ENTITIES).getAsJsonArray();
+    for (int i = 0; i < array.size(); i++) {
+      String s = array.get(i).getAsJsonObject().get(ENTITY).getAsString();
+      if (!s.contains(entityFilter)) {
+        array.remove(i);
+      } else {
+        long time = array.get(i).getAsJsonObject().get(STARTTIME).getAsLong();
+        if (minimumTime > time) {
+          minimumTime = time;
+        }
+      }
+    }
+  }
+  
+  public void addTaskEntities(String str, String entityFilter) {
+    Gson gson = new Gson();
+    JsonArray a =
+        gson.fromJson(str, JsonObject.class).get(ENTITIES).getAsJsonArray();
+    for (int i = 0; i < a.size(); i++) {
+      String s = a.get(i).getAsJsonObject().get(ENTITY).getAsString();
+      if (s.contains(entityFilter) &&
+          !array.contains(a.get(i).getAsJsonObject())) {
+        array.add(a.get(i).getAsJsonObject());
+        long time = a.get(i).getAsJsonObject().get(STARTTIME).getAsLong();
+        if (minimumTime > time) {
+          minimumTime = time;
+        }
+      }
+    }
+  }
+  
+  public long getTaskMinimumTime() {
+    return minimumTime;
   }
   
   public List<String> getEvents() {

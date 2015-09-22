@@ -33,7 +33,6 @@ public class TaskInfoPage {
   public TaskInfoPage(PrintWriter writer, JSON json) {
     page = new HTMLPage(writer);
     this.json = json;
-    this.json.setEntities();
     render();
   }
   
