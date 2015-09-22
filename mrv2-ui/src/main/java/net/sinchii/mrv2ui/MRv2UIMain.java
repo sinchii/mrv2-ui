@@ -24,7 +24,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import net.sinchii.mrv2ui.dao.JobInfo;
 import net.sinchii.mrv2ui.web.ErrorPage;
@@ -47,11 +46,6 @@ public class MRv2UIMain extends HttpServlet {
   private String tlsAddress;
   private static final String TLJPATH = "/ws/v1/timeline/MAPREDUCE_JOB";
   private static final String TLTPATH = "/ws/v1/timeline/MAPREDUCE_TASK";
-  
-  private static final String JOBID = "JOBID";
-  private static final String WINDOWSTART = "windowStart";
-  private static final String WINDOWEND = "windowEnd";
-  private static final String TOTALTASKS = "totalTasks";
   
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
@@ -82,60 +76,34 @@ public class MRv2UIMain extends HttpServlet {
       String result = getTLSRest(tlsAddress + TLJPATH + path, writer);
       if (result != null) {
         JSON json = new JSON(result);
-        HttpSession session = req.getSession();
-        session.setAttribute(JOBID,
-            json.getMRv2JobInfo().getJobId());
-        session.setAttribute(WINDOWSTART,
-            Long.toString(json.getMRv2JobInfo().getSubmitTime()));
-        session.setAttribute(WINDOWEND,
-            Long.toString(json.getMRv2JobInfo().getFinishTime()));
-        Integer totalTasks =
-            json.getMRv2JobInfo().getMapTasks() + json.getMRv2JobInfo().getReduceTasks();
-        session.setAttribute(TOTALTASKS, totalTasks);
         new JobInfoPage(writer, json);
       }
     } else if (path.startsWith("/task_")) {
-      String windowQuery = "";
-      String sessionJobId = "";
-      Long startTime = Long.MIN_VALUE;
-      Long finishTime = Long.MAX_VALUE;
-      Integer totalTasks = -1;
-      HttpSession session = req.getSession();
-      if (session != null) {
-        sessionJobId = (String) session.getAttribute(JOBID);
-        startTime =
-            Long.parseLong((String) session.getAttribute(WINDOWSTART));
-        finishTime =
-            Long.parseLong((String) session.getAttribute(WINDOWEND));
-        totalTasks = (Integer) session.getAttribute(TOTALTASKS);
-        windowQuery = setWindowQuery(startTime, finishTime);
-      } else {
-        sessionJobId = path.substring(5);
-        String result =
-            getTLSRest(tlsAddress + TLJPATH + sessionJobId, writer);
-        if (result == null) {
-          return;
-        }
-        JSON jobJson = new JSON(result);
-        JobInfo info = jobJson.getMRv2JobInfo();
-        totalTasks = info.getMapTasks() + info.getReduceTasks();
-        startTime = info.getSubmitTime();
-        finishTime = info.getFinishTime();
-        windowQuery = setWindowQuery(startTime, finishTime);
+      String jobId = path.substring(6);
+      String result = getTLSRest(tlsAddress + TLJPATH + "/" + jobId, writer);
+      if (result == null) {
+        return;
       }
-      String idFilter = sessionJobId.substring(4);
+      JSON jobJson = new JSON(result);
+      JobInfo info = jobJson.getMRv2JobInfo();
+      Integer totalTasks = info.getMapTasks() + info.getReduceTasks();
+      Long startTime = info.getSubmitTime();
+      Long finishTime = info.getFinishTime();
+      String windowQuery = setWindowQuery(startTime, finishTime);
+      
+      String idFilter = jobId.substring(4);
       JSON json = null;
       boolean success = false;
       while (startTime <= finishTime) {
-        String result = getTLSRest(tlsAddress + TLTPATH + windowQuery, writer);
-        if (result == null) {
+        String taskResult = getTLSRest(tlsAddress + TLTPATH + windowQuery, writer);
+        if (taskResult == null) {
           break;
         }
         if (json == null) {
-          json = new JSON(result, sessionJobId);
+          json = new JSON(taskResult, jobId);
           json.setTaskEntities(idFilter);
         } else {
-          json.addTaskEntities(result, idFilter);
+          json.addTaskEntities(taskResult, idFilter);
         }
         if (totalTasks == json.getNumEvents()) {
           success = true;
