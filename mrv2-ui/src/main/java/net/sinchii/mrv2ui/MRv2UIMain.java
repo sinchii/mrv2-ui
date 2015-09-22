@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sinchii.mrv2ui.dao.JobInfo;
 import net.sinchii.mrv2ui.web.ErrorPage;
 import net.sinchii.mrv2ui.web.JobInfoCSV;
 import net.sinchii.mrv2ui.web.JobInfoPage;
@@ -50,6 +51,7 @@ public class MRv2UIMain extends HttpServlet {
   private static final String JOBID = "JOBID";
   private static final String WINDOWSTART = "windowStart";
   private static final String WINDOWEND = "windowEnd";
+  private static final String TOTALTASKS = "totalTasks";
   
   protected void doGet(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
@@ -87,24 +89,64 @@ public class MRv2UIMain extends HttpServlet {
             Long.toString(json.getMRv2JobInfo().getSubmitTime()));
         session.setAttribute(WINDOWEND,
             Long.toString(json.getMRv2JobInfo().getFinishTime()));
+        Integer totalTasks =
+            json.getMRv2JobInfo().getMapTasks() + json.getMRv2JobInfo().getReduceTasks();
+        session.setAttribute(TOTALTASKS, totalTasks);
         new JobInfoPage(writer, json);
       }
     } else if (path.startsWith("/task_")) {
       String windowQuery = "";
       String sessionJobId = "";
+      Long startTime = Long.MIN_VALUE;
+      Long finishTime = Long.MAX_VALUE;
+      Integer totalTasks = -1;
       HttpSession session = req.getSession();
       if (session != null) {
         sessionJobId = (String) session.getAttribute(JOBID);
-        String wStart = (String) session.getAttribute(WINDOWSTART);
-        String wEnd = (String) session.getAttribute(WINDOWEND);
-        windowQuery = "?windowStart=" + wStart + "&windowEnd=" + wEnd;
+        startTime =
+            Long.parseLong((String) session.getAttribute(WINDOWSTART));
+        finishTime =
+            Long.parseLong((String) session.getAttribute(WINDOWEND));
+        totalTasks = (Integer) session.getAttribute(TOTALTASKS);
+        windowQuery = setWindowQuery(startTime, finishTime);
       } else {
         sessionJobId = path.substring(5);
+        String result =
+            getTLSRest(tlsAddress + TLJPATH + sessionJobId, writer);
+        if (result == null) {
+          return;
+        }
+        JSON jobJson = new JSON(result);
+        JobInfo info = jobJson.getMRv2JobInfo();
+        totalTasks = info.getMapTasks() + info.getReduceTasks();
+        startTime = info.getSubmitTime();
+        finishTime = info.getFinishTime();
+        windowQuery = setWindowQuery(startTime, finishTime);
       }
-      
-      String result = getTLSRest(tlsAddress + TLTPATH + windowQuery, writer);
-      if (result != null) {
-        JSON json = new JSON(result, sessionJobId);
+      String idFilter = sessionJobId.substring(4);
+      JSON json = null;
+      boolean success = false;
+      while (startTime <= finishTime) {
+        String result = getTLSRest(tlsAddress + TLTPATH + windowQuery, writer);
+        if (result == null) {
+          break;
+        }
+        if (json == null) {
+          json = new JSON(result, sessionJobId);
+          json.setTaskEntities(idFilter);
+        } else {
+          json.addTaskEntities(result, idFilter);
+        }
+        if (totalTasks == json.getNumEvents()) {
+          success = true;
+          break;
+        }
+        finishTime = json.getTaskMinimumTime();
+        windowQuery = setWindowQuery(startTime, finishTime);
+      }
+      if (!success) {
+        new ErrorPage(writer, HttpStatus.SC_INTERNAL_SERVER_ERROR);
+      } else {
         new TaskInfoPage(writer, json);
       }
     } else if (path.startsWith("/csv")) {
@@ -145,5 +187,9 @@ public class MRv2UIMain extends HttpServlet {
       return null;
     }
     return str;
+  }
+
+  private String setWindowQuery(Long start, Long finish) {
+    return "?windowStart=" + start + "&windowEnd=" + finish;
   }
 }
